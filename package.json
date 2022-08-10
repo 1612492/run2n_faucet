@@ -1,0 +1,37 @@
+{
+  "name": "run2n_faucet",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "start": "node index.cjs",
+    "dev:backend": "nodemon index.cjs",
+    "dev:frontend": "vite",
+    "build": "vite build"
+  },
+  "dependencies": {
+    "@ethersproject/address": "^5.6.1",
+    "@ethersproject/contracts": "^5.6.2",
+    "@ethersproject/providers": "^5.6.8",
+    "@ethersproject/units": "^5.6.1",
+    "@ethersproject/wallet": "^5.6.2",
+    "@hookform/resolvers": "^2.9.7",
+    "axios": "^0.27.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.1",
+    "express": "^4.18.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-google-recaptcha": "^2.1.0",
+    "react-hook-form": "^7.34.0",
+    "react-toastify": "^9.0.8",
+    "yup": "^0.32.11"
+  },
+  "devDependencies": {
+    "@types/react": "^18.0.15",
+    "@types/react-dom": "^18.0.6",
+    "@vitejs/plugin-react": "^2.0.0",
+    "nodemon": "^2.0.19",
+    "vite": "^3.0.0"
+  }
+}
