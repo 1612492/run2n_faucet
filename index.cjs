@@ -75,4 +75,6 @@ app.post("/request", async function (req, res) {
   res.send(tx.hash);
 });
 
-app.listen(process.env.PORT, () => console.log("Server is running"));
+app.listen(process.env.PORT, () =>
+  console.log(`Server is running on http://localhost:${process.env.PORT}`)
+);
