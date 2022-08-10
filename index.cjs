@@ -32,7 +32,7 @@ const schema = yup.object({
   reCaptcha: yup.string().required("reCaptcha is required"),
 });
 
-app.post("/faucet", async function (req, res) {
+app.post("/request", async function (req, res) {
   const { account, reCaptcha } = req.body;
 
   try {

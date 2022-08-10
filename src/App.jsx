@@ -37,7 +37,7 @@ function App() {
 
   async function onSubmit({ account, reCaptcha }) {
     await toast.promise(
-      axios.post(`${import.meta.env.VITE_API_URL}/faucet`, {
+      axios.post(`${import.meta.env.VITE_API_URL}/request`, {
         account,
         reCaptcha,
       }),
