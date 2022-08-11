@@ -112,7 +112,7 @@ function App() {
             />
           </div>
           <p className="validation">{errors.reCaptcha?.message}</p>
-          <button className="button">Request 5 Run2n token</button>
+          <button className="button">Request 25 token</button>
         </form>
       </main>
       <ToastContainer position="top-right" />
