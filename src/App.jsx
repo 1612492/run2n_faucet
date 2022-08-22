@@ -1,5 +1,4 @@
-import axios from "axios";
-import { useRef, useEffect } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import ReCAPTCHA from "react-google-recaptcha";
 import { ToastContainer, toast } from "react-toastify";
@@ -9,6 +8,9 @@ import * as yup from "yup";
 import "react-toastify/dist/ReactToastify.min.css";
 
 import logo from "./images/logo.png";
+import * as api from "./api";
+
+const explorer = "https://testnet.bscscan.com/tx/";
 
 const schema = yup.object({
   account: yup
@@ -18,7 +20,15 @@ const schema = yup.object({
   reCaptcha: yup.string().required("reCaptcha is required"),
 });
 
+export function shortenTxHash(hash) {
+  const startStr = hash.substring(0, 10);
+  const endStr = hash.substring(hash.length -20);
+  return startStr + "..." + endStr;
+}
+
 function App() {
+  const [processingTransactions, setProcessingTransactions] = useState(null);
+
   const {
     register,
     handleSubmit,
@@ -31,53 +41,50 @@ function App() {
   const recaptchaRef = useRef();
 
   function resetCaptcha() {
-    setValue("signature", "");
+    setValue("reCaptcha", "");
     recaptchaRef.current.reset();
   }
 
   async function onSubmit({ account, reCaptcha }) {
-    await toast.promise(
-      axios.post(`${import.meta.env.VITE_API_URL}/request`, {
-        account,
-        reCaptcha,
-      }),
-      {
-        pending: "Processing",
-        success: {
-          render({ data }) {
-            return (
-              <p>
-                You have submited a transaction.
-                <br />
-                {data?.data ? (
-                  <a
-                    rel="noreferrer"
-                    target="_blank"
-                    href={`https://testnet.bscscan.com/tx/${data.data}`}
-                  >
-                    View it on block explorer
-                  </a>
-                ) : null}
-              </p>
-            );
-          },
-          autoClose: false,
-          closeOnClick: false,
-        },
-        error: {
-          render({ data }) {
-            if (data?.response?.data?.message) {
-              return data.response.data.message;
-            }
+    await toast.promise(api.addToQueue({ account, reCaptcha }), {
+      pending: "Processing",
+      success: {
+        render({ data }) {
+          if (data?.data?.message) {
+            return data.data.message;
+          }
 
-            return "An error occurred";
-          },
+          return "Success";
         },
-      }
-    );
+      },
+      error: {
+        render({ data }) {
+          if (data?.response?.data?.message) {
+            return data.response.data.message;
+          }
+
+          return "An error occurred";
+        },
+      },
+    });
 
     resetCaptcha();
   }
+
+  async function getQueue() {
+    try {
+      const { data } = await api.getQueue();
+      setProcessingTransactions(data.processing);
+    } catch (error) {}
+  }
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      getQueue();
+    }, 1000);
+
+    return () => clearInterval(intervalId);
+  }, []);
 
   useEffect(() => {
     register("reCaptcha");
@@ -114,6 +121,21 @@ function App() {
           <p className="validation">{errors.reCaptcha?.message}</p>
           <button className="button">Request 25 token</button>
         </form>
+        {processingTransactions && processingTransactions.length > 0 ? (
+          <section className="sub-card">
+            <p className="heading">Processing transactions</p>
+            {processingTransactions.map(({ txHash }) => (
+              <a
+                href={explorer + txHash}
+                target="_blank"
+                rel="noreferrer"
+                className="link"
+              >
+                {shortenTxHash(txHash)}
+              </a>
+            ))}
+          </section>
+        ) : null}
       </main>
       <ToastContainer position="top-right" />
     </section>

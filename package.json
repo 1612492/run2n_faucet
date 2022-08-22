@@ -2,10 +2,9 @@
   "name": "run2n_faucet",
   "private": true,
   "version": "0.0.0",
-  "type": "module",
   "scripts": {
-    "start": "node index.cjs",
-    "dev:backend": "nodemon index.cjs",
+    "start": "node index.js",
+    "dev:backend": "nodemon index.js",
     "dev:frontend": "vite",
     "build": "vite build"
   },
@@ -16,6 +15,7 @@
     "@ethersproject/units": "^5.6.1",
     "@ethersproject/wallet": "^5.6.2",
     "@hookform/resolvers": "^2.9.7",
+    "async": "^3.2.4",
     "axios": "^0.27.2",
     "cors": "^2.8.5",
     "dotenv": "^16.0.1",
