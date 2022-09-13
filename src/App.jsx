@@ -104,7 +104,7 @@ function App() {
           </p>
           <input
             {...register("account")}
-            placeholder="Input your address"
+            placeholder="Input your wallet address (get in test app)"
             className="input"
           />
           <p className="validation">{errors.account?.message}</p>
